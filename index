@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NextLevelGames | Dream. Build. Dominate.</title>
+  <style>
+    :root {
+      --soulblue: #2363e2;
+      --dark: #0c1a3f;
+      --light: #f4f8ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    header {
+      background-color: var(--soulblue);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    section {
+      padding: 2rem 1rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h2 {
+      color: var(--soulblue);
+    }
+
+    footer {
+      background-color: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    a {
+      color: var(--soulblue);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NextLevelGames</h1>
+    <p>Dreaming Big. Building Games. Dominating Esports.</p>
+  </header>
+
+  <section>
+    <h2>About Us</h2>
+    <p>
+      NextLevelGames is a rising force in the gaming entertainment industry. Founded with a bold vision,
+      we are driven by the mission to become a global gaming giant — empowering creators, players, and competitive gamers alike.
+    </p>
+    <p>
+      From thrilling game development to hosting elite esports tournaments, we are crafting the future of interactive entertainment.
+    </p>
+  </section>
+
+  <section>
+    <h2>Our Mission</h2>
+    <p>
+      To become a world-leading gaming company by delivering unforgettable gaming experiences,
+      championing competitive esports, and pushing the boundaries of creative design and technology.
+    </p>
+  </section>
+
+  <section>
+    <h2>What We Do</h2>
+    <ul>
+      <li>🎮 Game Development: Building immersive worlds for players everywhere.</li>
+      <li>⚔️ Esports Platform: Competitive gaming at its finest — join, win, and rise.</li>
+      <li>🌟 Community Driven: We build with passion and for the players.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Contact Us</h2>
+    <p>Email: <a href="mailto:nextlevelgames02@gmail.com">nextlevelgames02@gmail.com</a></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 NextLevelGames. All rights reserved.</p>
+  </footer>
+</body>
+</html>
