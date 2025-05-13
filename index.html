@@ -563,7 +563,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12">
+    <footer class="bg-gray-900 text-gray-400 py-8 border-t border-gray-800">
         <div class="container mx-auto px-6 md:px-12">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
@@ -596,7 +596,6 @@
                         </a>
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path>
                             </svg>
                         </a>
@@ -611,6 +610,133 @@
             </div>
         </div>
     </footer>
+
+    <!-- Employee Verification Section - Hidden by default -->
+    <section id="employee-verification-section" class="fixed inset-0 bg-gray-900 bg-opacity-95 z-50 overflow-auto hidden">
+        <div class="container mx-auto mt-8 px-4 pb-16 pt-24">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-4xl font-bold text-white">Employee Verification</h1>
+                <button id="close-employee-view" class="text-white hover:text-gray-300 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <p class="text-gray-400 mb-8">Verify the employment status of NextLevel Games personnel</p>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="hidden flex flex-col items-center justify-center py-16">
+                <div class="w-16 h-16 border-4 border-soulblue border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-xl mt-4">Loading employee data...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="hidden max-w-2xl mx-auto bg-red-900/30 border border-red-700 text-white rounded-lg p-6 text-center">
+                <svg class="w-12 h-12 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <h2 class="text-2xl font-bold mb-2">Verification Failed</h2>
+                <p id="error-message" class="text-lg">Unable to find employee record. The document ID may be invalid.</p>
+                <button id="back-to-home" class="mt-6 inline-block bg-white text-red-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-200 transition-colors">
+                    Return to Home
+                </button>
+            </div>
+
+            <!-- Manual Employee ID Entry -->
+            <div id="employee-id-entry" class="max-w-2xl mx-auto bg-gray-800 rounded-xl p-8 mb-8">
+                <h3 class="text-2xl font-bold text-white mb-4">Enter Employee ID</h3>
+                <p class="text-gray-300 mb-6">Enter the document ID to verify an employee's record.</p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input type="text" id="employee-doc-id" placeholder="Enter document ID" class="flex-grow px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-soulblue">
+                    <button id="verify-employee-btn" class="bg-soulblue hover:bg-soulblue-light text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                        Verify
+                    </button>
+                </div>
+                <p id="id-error" class="mt-2 text-red-400 text-sm hidden">Please enter a valid document ID</p>
+            </div>
+
+            <!-- Employee Data -->
+            <div id="employee-data" class="hidden max-w-4xl mx-auto bg-gray-800 rounded-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-soulblue to-soulblue-dark p-6 md:p-8">
+                    <div class="flex flex-col sm:flex-row items-center">
+                        <div id="employee-photo" class="employee-photo bg-gray-700 flex items-center justify-center mb-4 sm:mb-0 sm:mr-6">
+                            <svg class="w-20 h-20 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="text-center sm:text-left">
+                            <h2 id="employee-name" class="text-3xl font-bold text-white mb-1">Employee Name</h2>
+                            <p id="employee-role" class="text-xl text-blue-200">Job Role</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">Personal Information</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="data-row pb-3">
+                                    <p class="text-gray-400 text-sm">Employee ID</p>
+                                    <p id="employee-id" class="text-white font-medium">UUID</p>
+                                </div>
+                                <div class="data-row pb-3">
+                                    <p class="text-gray-400 text-sm">Address</p>
+                                    <p id="employee-address" class="text-white">Address here</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">Employment Details</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="data-row pb-3">
+                                    <p class="text-gray-400 text-sm">Compensation</p>
+                                    <p id="employee-salary" class="text-white">Salary info</p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 pt-2">
+                                    <div class="bg-green-900/30 border border-green-700 p-3 rounded-lg text-center">
+                                        <p class="text-gray-300 text-sm mb-1">Join Date</p>
+                                        <p id="join-date" class="text-white font-medium">-</p>
+                                    </div>
+                                    <div class="bg-red-900/30 border border-red-700 p-3 rounded-lg text-center">
+                                        <p class="text-gray-300 text-sm mb-1">Leave Date</p>
+                                        <p id="leave-date" class="text-white font-medium">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-gray-700">
+                        <div class="flex flex-col sm:flex-row justify-between items-center">
+                            <div class="flex items-center mb-4 sm:mb-0">
+                                <svg class="w-6 h-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="text-green-400 font-medium">Verified Employee Record</span>
+                            </div>
+                            <button id="copy-verification-link" class="flex items-center text-blue-400 hover:text-blue-300">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                                </svg>
+                                Share Verification Link
+                            </button>
+                        </div>
+                        <div id="link-copied" class="mt-2 text-green-400 text-sm text-center hidden">
+                            Verification link copied to clipboard!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <script>
         // Mobile menu toggle
@@ -641,6 +767,249 @@
                 }
             });
         });
+
+        // Employee verification system
+        (function() {
+            // Firebase configuration - hidden from window scope
+            const firebaseConfig = {
+                apiKey: "AIzaSyA-5Ibk3pf8m8ohorzaLWEF61WgysYjC4I",
+                authDomain: "nextlevel-esports-36a2a.firebaseapp.com",
+                projectId: "nextlevel-esports-36a2a",
+                storageBucket: "nextlevel-esports-36a2a.firebasestorage.app",
+                messagingSenderId: "339661921324",
+                appId: "1:339661921324:web:e966b64227fcdac3e38589",
+                measurementId: "G-99XRLWL93H"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            // DOM Elements
+            const employeeSection = document.getElementById('employee-verification-section');
+            const loadingState = document.getElementById('loading-state');
+            const errorState = document.getElementById('error-state');
+            const employeeIdEntry = document.getElementById('employee-id-entry');
+            const employeeData = document.getElementById('employee-data');
+            const errorMessage = document.getElementById('error-message');
+            const closeButton = document.getElementById('close-employee-view');
+            const backButton = document.getElementById('back-to-home');
+            const verifyButton = document.getElementById('verify-employee-btn');
+            const docIdInput = document.getElementById('employee-doc-id');
+            const idError = document.getElementById('id-error');
+            const copyLinkButton = document.getElementById('copy-verification-link');
+            const linkCopied = document.getElementById('link-copied');
+
+            // CSS for employee photo
+            const style = document.createElement('style');
+            style.textContent = `
+                .employee-photo {
+                    width: 160px;
+                    height: 160px;
+                    border-radius: 50%;
+                    border: 3px solid #1E40AF;
+                    overflow: hidden;
+                }
+                .data-row {
+                    border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Format Firebase timestamp to readable date
+            function formatFirebaseTimestamp(timestamp) {
+                if (!timestamp) return 'Not specified';
+                
+                try {
+                    const date = new Date(timestamp.seconds * 1000);
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    return 'Invalid date';
+                }
+            }
+
+            // Handle routing based on hash
+            function handleRouting() {
+                const hash = window.location.hash;
+                
+                // Check if the hash is for employee verification
+                if (hash.startsWith('#/employee/')) {
+                    const docId = hash.replace('#/employee/', '');
+                    
+                    if (docId) {
+                        showEmployeeSection();
+                        fetchEmployeeData(docId);
+                    } else {
+                        showEmployeeSection();
+                        showEntryForm();
+                    }
+                } else if (hash === '#/verify') {
+                    showEmployeeSection();
+                    showEntryForm();
+                }
+            }
+            
+            // Add verify employee button to nav menus
+            function addVerifyButtons() {
+                // Add to main navigation
+                const navLinks = document.querySelector('.hidden.md\\:flex.space-x-8');
+                if (navLinks) {
+                    const verifyLink = document.createElement('a');
+                    verifyLink.href = "#/verify";
+                    verifyLink.classList.add('hover:text-gray-300', 'transition-colors');
+                    verifyLink.textContent = "Verify Employee";
+                    navLinks.appendChild(verifyLink);
+                }
+                
+                // Add to mobile menu
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.querySelector('.flex.flex-col.space-y-4')) {
+                    const mobileLinks = mobileMenu.querySelector('.flex.flex-col.space-y-4');
+                    const mobileverifyLink = document.createElement('a');
+                    mobileverifyLink.href = "#/verify";
+                    mobileverifyLink.classList.add('hover:text-gray-300', 'transition-colors');
+                    mobileverifyLink.textContent = "Verify Employee";
+                    mobileLinks.appendChild(mobileverifyLink);
+                }
+            }
+            
+            // Show employee verification section
+            function showEmployeeSection() {
+                employeeSection.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            }
+            
+            // Hide employee verification section
+            function hideEmployeeSection() {
+                employeeSection.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable scrolling
+                window.location.hash = ''; // Clear hash
+            }
+            
+            // Show entry form
+            function showEntryForm() {
+                loadingState.classList.add('hidden');
+                errorState.classList.add('hidden');
+                employeeData.classList.add('hidden');
+                employeeIdEntry.classList.remove('hidden');
+            }
+
+            // Reset UI states
+            function resetUI() {
+                employeeIdEntry.classList.add('hidden');
+                loadingState.classList.remove('hidden');
+                errorState.classList.add('hidden');
+                employeeData.classList.add('hidden');
+                linkCopied.classList.add('hidden');
+            }
+            
+            // Fetch employee data
+            async function fetchEmployeeData(docId) {
+                if (!docId) {
+                    showEntryForm();
+                    return;
+                }
+                
+                resetUI();
+                
+                try {
+                    // Fetch document from Firestore
+                    const documentRef = db.collection('nxt02').doc(docId);
+                    const doc = await documentRef.get();
+                    
+                    if (doc.exists) {
+                        const data = doc.data();
+                        
+                        // Set employee data
+                        document.getElementById('employee-name').textContent = data.name || 'Name not available';
+                        document.getElementById('employee-role').textContent = data.jobrole || 'Role not available';
+                        document.getElementById('employee-id').textContent = data.uuid || 'ID not available';
+                        document.getElementById('employee-address').textContent = data.Adress || 'Address not available';
+                        document.getElementById('employee-salary').textContent = data.salary || 'Not available';
+                        document.getElementById('join-date').textContent = formatFirebaseTimestamp(data.joindate);
+                        document.getElementById('leave-date').textContent = formatFirebaseTimestamp(data.leavedate);
+                        
+                        // Set photo if available
+                        if (data.Photo) {
+                            const photoDiv = document.getElementById('employee-photo');
+                            photoDiv.innerHTML = `<img src="${data.Photo}" alt="${data.name}" class="w-full h-full object-cover">`;
+                        }
+                        
+                        // Show employee data
+                        loadingState.classList.add('hidden');
+                        employeeData.classList.remove('hidden');
+                    } else {
+                        // Document doesn't exist
+                        loadingState.classList.add('hidden');
+                        errorState.classList.remove('hidden');
+                        errorMessage.textContent = `No employee record found with ID: ${docId}`;
+                    }
+                } catch (error) {
+                    console.error('Error fetching employee data:', error);
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    errorMessage.textContent = `Error fetching employee data: ${error.message}`;
+                }
+            }
+
+            // Event listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add verify buttons to navigation
+                addVerifyButtons();
+                
+                // Handle hash-based routing
+                handleRouting();
+                
+                // Listen for hash changes
+                window.addEventListener('hashchange', handleRouting);
+                
+                // Close employee view
+                closeButton.addEventListener('click', hideEmployeeSection);
+                
+                // Back to home from error
+                backButton.addEventListener('click', function() {
+                    showEntryForm();
+                });
+                
+                // Verify employee button
+                verifyButton.addEventListener('click', function() {
+                    const docId = docIdInput.value.trim();
+                    if (docId) {
+                        window.location.hash = `#/employee/${docId}`;
+                    } else {
+                        idError.classList.remove('hidden');
+                    }
+                });
+                
+                // Hide error when typing
+                docIdInput.addEventListener('input', function() {
+                    idError.classList.add('hidden');
+                });
+                
+                // Copy verification link
+                copyLinkButton.addEventListener('click', function() {
+                    const verificationUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
+                    
+                    // Create a temporary input element
+                    const tempInput = document.createElement('input');
+                    document.body.appendChild(tempInput);
+                    tempInput.value = verificationUrl;
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    
+                    // Show confirmation
+                    linkCopied.classList.remove('hidden');
+                    setTimeout(() => {
+                        linkCopied.classList.add('hidden');
+                    }, 3000);
+                });
+            });
+        })();
     </script>
 </body>
 </html>
