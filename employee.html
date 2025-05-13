@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextLevel Games - Employee Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        soulblue: {
+                            light: '#3B82F6',
+                            DEFAULT: '#1E40AF',
+                            dark: '#1E3A8A',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .employee-card {
+                box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.1), 0 8px 10px -6px rgba(30, 64, 175, 0.1);
+            }
+            .employee-photo {
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                border: 3px solid #1E40AF;
+                overflow: hidden;
+            }
+            .data-row {
+                border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-300 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-soulblue py-4 px-6 md:px-12 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-white">Next Level Games</h1>
+            </a>
+            <a href="index.html" class="text-white hover:text-gray-300 transition-colors">
+                <span class="hidden md:inline">Return to </span>Home
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8 px-4 pb-16">
+        <div class="text-center my-8">
+            <h1 class="text-4xl font-bold text-white">Employee Verification</h1>
+            <p class="text-gray-400 mt-2">Verify the employment status of NextLevel Games personnel</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="flex flex-col items-center justify-center py-16">
+            <div class="w-16 h-16 border-4 border-soulblue border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-xl mt-4">Loading employee data...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="hidden max-w-2xl mx-auto bg-red-900/30 border border-red-700 text-white rounded-lg p-6 text-center">
+            <svg class="w-12 h-12 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold mb-2">Verification Failed</h2>
+            <p id="error-message" class="text-lg">Unable to find employee record. The document ID may be invalid.</p>
+            <a href="index.html" class="mt-6 inline-block bg-white text-red-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-200 transition-colors">
+                Return Home
+            </a>
+        </div>
+
+        <!-- Employee Data -->
+        <div id="employee-data" class="hidden max-w-4xl mx-auto bg-gray-800 rounded-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-soulblue to-soulblue-dark p-6 md:p-8">
+                <div class="flex flex-col sm:flex-row items-center">
+                    <div id="employee-photo" class="employee-photo bg-gray-700 flex items-center justify-center mb-4 sm:mb-0 sm:mr-6">
+                        <svg class="w-20 h-20 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <h2 id="employee-name" class="text-3xl font-bold text-white mb-1">Employee Name</h2>
+                        <p id="employee-role" class="text-xl text-blue-200">Job Role</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">Personal Information</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="data-row pb-3">
+                                <p class="text-gray-400 text-sm">Employee ID</p>
+                                <p id="employee-id" class="text-white font-medium">UUID</p>
+                            </div>
+                            <div class="data-row pb-3">
+                                <p class="text-gray-400 text-sm">Address</p>
+                                <p id="employee-address" class="text-white">Address here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">Employment Details</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="data-row pb-3">
+                                <p class="text-gray-400 text-sm">Compensation</p>
+                                <p id="employee-salary" class="text-white">Salary info</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 pt-2">
+                                <div class="bg-green-900/30 border border-green-700 p-3 rounded-lg text-center">
+                                    <p class="text-gray-300 text-sm mb-1">Join Date</p>
+                                    <p id="join-date" class="text-white font-medium">-</p>
+                                </div>
+                                <div class="bg-red-900/30 border border-red-700 p-3 rounded-lg text-center">
+                                    <p class="text-gray-300 text-sm mb-1">Leave Date</p>
+                                    <p id="leave-date" class="text-white font-medium">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-green-400 font-medium">Verified Employee Record</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">NextLevel Games Employee Verification System</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 border-t border-gray-800">
+        <div class="container mx-auto px-6 text-center">
+            <p>© 2025 Next Level Games. All rights reserved.</p>
+            <p class="mt-2 text-sm">This is an official employee verification page.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Immediately invoked function to hide credentials from console
+        (function() {
+            // Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyA-5Ibk3pf8m8ohorzaLWEF61WgysYjC4I",
+                authDomain: "nextlevel-esports-36a2a.firebaseapp.com",
+                projectId: "nextlevel-esports-36a2a",
+                storageBucket: "nextlevel-esports-36a2a.firebasestorage.app",
+                messagingSenderId: "339661921324",
+                appId: "1:339661921324:web:e966b64227fcdac3e38589",
+                measurementId: "G-99XRLWL93H"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            // Get document ID from URL
+            function getDocIdFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('id');
+            }
+
+            // Format Firebase timestamp
+            function formatFirebaseTimestamp(timestamp) {
+                if (!timestamp) return 'Not specified';
+                
+                try {
+                    const date = new Date(timestamp.seconds * 1000);
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    return 'Invalid date';
+                }
+            }
+
+            // Fetch and display employee data
+            async function fetchEmployeeData() {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const employeeData = document.getElementById('employee-data');
+                const errorMessage = document.getElementById('error-message');
+                
+                const docId = getDocIdFromUrl();
+                
+                if (!docId) {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    errorMessage.textContent = 'No employee ID provided in the URL.';
+                    return;
+                }
+
+                try {
+                    // Fetch document from Firestore
+                    const documentRef = db.collection('nxt02').doc(docId);
+                    const doc = await documentRef.get();
+                    
+                    if (doc.exists) {
+                        const data = doc.data();
+                        
+                        // Set employee data
+                        document.getElementById('employee-name').textContent = data.name || 'Name not available';
+                        document.getElementById('employee-role').textContent = data.jobrole || 'Role not available';
+                        document.getElementById('employee-id').textContent = data.uuid || 'ID not available';
+                        document.getElementById('employee-address').textContent = data.Adress || 'Address not available';
+                        document.getElementById('employee-salary').textContent = data.salary || 'Not available';
+                        document.getElementById('join-date').textContent = formatFirebaseTimestamp(data.joindate);
+                        document.getElementById('leave-date').textContent = formatFirebaseTimestamp(data.leavedate);
+                        
+                        // Set photo if available
+                        if (data.Photo) {
+                            const photoDiv = document.getElementById('employee-photo');
+                            photoDiv.innerHTML = `<img src="${data.Photo}" alt="${data.name}" class="w-full h-full object-cover">`;
+                        }
+                        
+                        // Update page title
+                        document.title = `${data.name || 'Employee'} - NextLevel Games Verification`;
+                        
+                        // Show employee data
+                        loadingState.classList.add('hidden');
+                        employeeData.classList.remove('hidden');
+                    } else {
+                        // Document doesn't exist
+                        loadingState.classList.add('hidden');
+                        errorState.classList.remove('hidden');
+                        errorMessage.textContent = `No employee record found with ID: ${docId}`;
+                    }
+                } catch (error) {
+                    console.error('Error fetching employee data:', error);
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    errorMessage.textContent = `Error fetching employee data: ${error.message}`;
+                }
+            }
+
+            // On page load, fetch employee data
+            document.addEventListener('DOMContentLoaded', fetchEmployeeData);
+        })();
+    </script>
+</body>
+</html>
+
